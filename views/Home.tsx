@@ -12,9 +12,10 @@ import { ICharacter } from '../interface/index'
 
 interface ICharacterItemProps {
 	character: ICharacter
+	onNavigate: (id: number) => void
 }
 
-const CharacterItem = ({ character }: ICharacterItemProps) => {
+const CharacterItem = ({ character, onNavigate }: ICharacterItemProps) => {
 	const thumnailURI = `${character.thumbnail.path}.${
 		character.thumbnail.extension
 	}`
@@ -24,7 +25,11 @@ const CharacterItem = ({ character }: ICharacterItemProps) => {
 				source={{ uri: thumnailURI }}
 				style={{ width: 100, height: 100 }}
 			/>
-			<Text style={styles.textCenter} key={character.id}>
+			<Text
+				style={styles.textCenter}
+				key={character.id}
+				onPress={() => onNavigate(character.id as number)}
+			>
 				{character.name}
 			</Text>
 		</View>
@@ -32,13 +37,22 @@ const CharacterItem = ({ character }: ICharacterItemProps) => {
 }
 
 export class Home extends React.Component<{}> {
+	navigateToCharacter = (id: number) => {
+		const { navigate } = this.props.navigation
+		navigate('Profile', { id })
+	}
+
 	render() {
 		return (
 			<ScrollView style={{ backgroundColor: '#fff' }}>
 				<Text style={styles.logo}>Marvel'ous</Text>
 				<View style={styles.container}>
 					{characters.map((character: ICharacter) => (
-						<CharacterItem key={character.id} character={character} />
+						<CharacterItem
+							key={character.id}
+							character={character}
+							onNavigate={this.navigateToCharacter}
+						/>
 					))}
 				</View>
 			</ScrollView>
